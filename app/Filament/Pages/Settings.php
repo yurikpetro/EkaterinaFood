@@ -58,9 +58,17 @@ class Settings extends Page
                             ->label('WhatsApp (только цифры, с 7)')
                             ->helperText('Например: 79001234567'),
                         TextInput::make('telegram')
-                            ->label('Ссылка Telegram')
+                            ->label('Ссылка на личный чат Telegram')
                             ->url()
                             ->placeholder('https://t.me/username'),
+                        TextInput::make('telegram_channel')
+                            ->label('Ссылка на Telegram-канал')
+                            ->url()
+                            ->placeholder('https://t.me/your_channel'),
+                        TextInput::make('max')
+                            ->label('Ссылка на личный чат в Max')
+                            ->url()
+                            ->placeholder('https://max.ru/u/...'),
                         TextInput::make('pickup_address')
                             ->label('Адрес самовывоза')
                             ->columnSpanFull(),

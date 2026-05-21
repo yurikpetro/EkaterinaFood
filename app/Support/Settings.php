@@ -12,6 +12,10 @@ class Settings
 
     public const TELEGRAM = 'telegram';
 
+    public const TELEGRAM_CHANNEL = 'telegram_channel';
+
+    public const MAX = 'max';
+
     public const PICKUP_ADDRESS = 'pickup_address';
 
     public const HERO_TITLE = 'hero_title';
@@ -26,6 +30,8 @@ class Settings
             self::PHONE => '+7 (900) 000-00-00',
             self::WHATSAPP => '79000000000',
             self::TELEGRAM => '',
+            self::TELEGRAM_CHANNEL => '',
+            self::MAX => '',
             self::PICKUP_ADDRESS => 'Адрес самовывоза уточняйте по телефону',
             self::HERO_TITLE => 'Домашняя еда от тёти Кати',
             self::HERO_SUBTITLE => 'Вкусные блюда на каждый день, праздники и корпоративы',

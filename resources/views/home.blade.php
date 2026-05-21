@@ -49,18 +49,30 @@
             </div>
         </div>
 
-        @if($whatsapp || $telegram)
+        @if($whatsapp || $telegram || $telegramChannel || $max)
             <div class="flex flex-wrap gap-4 justify-center mt-8">
                 @if($whatsapp)
                     <a href="https://wa.me/{{ preg_replace('/\D+/', '', $whatsapp) }}" target="_blank" rel="noopener"
-                       class="bg-[#25D366] text-white font-bold px-6 py-3 rounded-xl hover:opacity-90 transition">
+                       class="inline-block bg-whatsapp text-white font-bold px-6 py-3 rounded-xl hover:brightness-95 transition">
                         Написать в WhatsApp
                     </a>
                 @endif
                 @if($telegram)
                     <a href="{{ $telegram }}" target="_blank" rel="noopener"
-                       class="bg-[#0088cc] text-white font-bold px-6 py-3 rounded-xl hover:opacity-90 transition">
+                       class="inline-block bg-telegram text-white font-bold px-6 py-3 rounded-xl hover:brightness-95 transition">
                         Telegram
+                    </a>
+                @endif
+                @if($telegramChannel)
+                    <a href="{{ $telegramChannel }}" target="_blank" rel="noopener"
+                       class="inline-block bg-telegram text-white font-bold px-6 py-3 rounded-xl hover:brightness-95 transition">
+                        Telegram-канал
+                    </a>
+                @endif
+                @if($max)
+                    <a href="{{ $max }}" target="_blank" rel="noopener"
+                       class="inline-block bg-max text-white font-bold px-6 py-3 rounded-xl hover:brightness-95 transition">
+                        Написать в Max
                     </a>
                 @endif
             </div>

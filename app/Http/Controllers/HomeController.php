@@ -15,6 +15,8 @@ class HomeController extends Controller
             'phone' => Settings::get(Settings::PHONE),
             'whatsapp' => Settings::get(Settings::WHATSAPP),
             'telegram' => Settings::get(Settings::TELEGRAM),
+            'telegramChannel' => Settings::get(Settings::TELEGRAM_CHANNEL),
+            'max' => Settings::get(Settings::MAX),
         ]);
     }
 }

@@ -14,6 +14,9 @@
     --color-olive: #5c6b4a;
     --color-olive-dark: #4a573c;
     --color-warm-brown: #3d3229;
+    --color-whatsapp: #25d366;
+    --color-telegram: #0088cc;
+    --color-max: #0066ff;
 }
 
 @layer base {
