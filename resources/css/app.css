@@ -73,4 +73,8 @@
         -webkit-appearance: none;
         margin: 0;
     }
+
+    .cart-item-remove:active {
+        @apply scale-95 bg-red-100;
+    }
 }
