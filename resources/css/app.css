@@ -37,4 +37,40 @@
     .btn-press:active {
         @apply scale-[0.96] brightness-95 shadow-none;
     }
+
+    .qty-stepper__control {
+        @apply inline-flex items-stretch rounded-xl border-2 border-cream-dark bg-white shadow-sm overflow-hidden;
+    }
+
+    .qty-stepper__btn {
+        @apply flex items-center justify-center w-11 h-11 text-olive bg-cream transition-colors duration-150 select-none touch-manipulation disabled:opacity-35 disabled:cursor-not-allowed;
+    }
+
+    .qty-stepper__btn:not(:disabled):hover {
+        @apply bg-olive text-white;
+    }
+
+    .qty-stepper__btn:not(:disabled):active {
+        @apply scale-95 bg-olive-dark;
+    }
+
+    .qty-stepper__btn--dec {
+        @apply rounded-l-[10px];
+    }
+
+    .qty-stepper__btn--inc {
+        @apply rounded-r-[10px];
+    }
+
+    .qty-stepper__input {
+        @apply w-14 sm:w-16 text-center text-lg font-bold text-warm-brown border-x-2 border-cream-dark bg-white focus:outline-none focus:bg-cream/40;
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+
+    .qty-stepper__input::-webkit-outer-spin-button,
+    .qty-stepper__input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 }

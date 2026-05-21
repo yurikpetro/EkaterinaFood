@@ -43,10 +43,13 @@
                                 <form action="{{ route('cart.add') }}" method="POST" class="mt-auto flex flex-wrap items-end gap-3">
                                     @csrf
                                     <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                    <label class="flex flex-col text-sm font-semibold">
+                                    <label class="flex flex-col gap-1.5 text-sm font-semibold">
                                         Кол-во
-                                        <input type="number" name="quantity" value="{{ $product->min_quantity }}" min="{{ $product->min_quantity }}"
-                                               class="mt-1 w-24 text-lg border-2 border-cream-dark rounded-xl px-3 py-2 focus:border-terracotta focus:outline-none">
+                                        <x-quantity-stepper
+                                            name="quantity"
+                                            :value="$product->min_quantity"
+                                            :min="$product->min_quantity"
+                                        />
                                     </label>
                                     <button type="submit"
                                             class="btn-press bg-terracotta text-white font-bold text-lg px-6 py-3 rounded-xl shadow-sm hover:bg-terracotta-dark">

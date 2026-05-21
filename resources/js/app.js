@@ -1,6 +1,69 @@
 const formatPrice = (amount) =>
     new Intl.NumberFormat('ru-RU').format(amount) + ' ₽';
 
+const initQuantitySteppers = () => {
+    document.querySelectorAll('[data-qty-stepper]').forEach((stepper) => {
+        const input = stepper.querySelector('[data-qty-input]');
+        const decrement = stepper.querySelector('[data-qty-decrement]');
+        const increment = stepper.querySelector('[data-qty-increment]');
+
+        if (!input || !decrement || !increment) {
+            return;
+        }
+
+        const min = parseInt(input.min, 10) || 0;
+        const max = input.max !== '' ? parseInt(input.max, 10) : null;
+
+        const clamp = (value) => {
+            let qty = parseInt(value, 10);
+
+            if (Number.isNaN(qty)) {
+                qty = min;
+            }
+
+            if (qty < min) {
+                qty = min;
+            }
+
+            if (max !== null && qty > max) {
+                qty = max;
+            }
+
+            return qty;
+        };
+
+        const updateButtons = () => {
+            const qty = parseInt(input.value, 10) || 0;
+            decrement.disabled = qty <= min;
+            increment.disabled = max !== null && qty >= max;
+        };
+
+        const setValue = (nextValue) => {
+            input.value = String(clamp(nextValue));
+            updateButtons();
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+        };
+
+        decrement.addEventListener('click', () => {
+            setValue((parseInt(input.value, 10) || min) - 1);
+        });
+
+        increment.addEventListener('click', () => {
+            setValue((parseInt(input.value, 10) || min) + 1);
+        });
+
+        input.addEventListener('input', updateButtons);
+
+        input.addEventListener('change', () => {
+            input.value = String(clamp(input.value));
+            updateButtons();
+        });
+
+        updateButtons();
+    });
+};
+
 const initFloatingCart = () => {
     const toggle = document.getElementById('cart-floating-toggle');
     const panel = document.getElementById('cart-floating-panel');
@@ -174,6 +237,7 @@ const initCartPage = () => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    initQuantitySteppers();
     initFloatingCart();
     initCartPage();
 });

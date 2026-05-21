@@ -36,14 +36,14 @@
                             </p>
                         </div>
                         <div class="flex flex-wrap items-center gap-4">
-                            <label class="flex items-center gap-2 font-semibold text-sm">
-                                Кол-во
-                                <input type="number"
-                                       data-cart-quantity
-                                       value="{{ $item['quantity'] }}"
-                                       min="0"
-                                       class="w-20 text-lg border-2 border-cream-dark rounded-lg px-2 py-1 focus:border-terracotta focus:outline-none">
-                            </label>
+                            <div class="flex items-center gap-3">
+                                <span class="font-semibold text-sm shrink-0">Кол-во</span>
+                                <x-quantity-stepper
+                                    data-cart-quantity
+                                    :value="$item['quantity']"
+                                    :min="0"
+                                />
+                            </div>
                             <form action="{{ route('cart.remove', $product->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
