@@ -30,11 +30,11 @@ class CategoriesTable
                     ->counts('products'),
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()->label('Изменить'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->label('Удалить выбранные'),
                 ]),
             ]);
     }

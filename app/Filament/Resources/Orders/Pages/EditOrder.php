@@ -54,7 +54,7 @@ class EditOrder extends EditRecord
                 ->color('success')
                 ->url($service->whatsAppUrl(Settings::get(Settings::WHATSAPP), $service->adminWhatsAppText($order)))
                 ->openUrlInNewTab(),
-            DeleteAction::make(),
+            DeleteAction::make()->label('Удалить'),
         ];
     }
 }

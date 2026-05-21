@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Orders\Tables;
 
+use App\Enums\DeliveryType;
 use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Services\OrderService;
@@ -34,6 +35,11 @@ class OrdersTable
                 TextColumn::make('customer_phone')
                     ->label('Телефон')
                     ->searchable(),
+                TextColumn::make('delivery_type')
+                    ->label('Получение')
+                    ->badge()
+                    ->formatStateUsing(fn (DeliveryType $state): string => $state->getLabel())
+                    ->toggleable(),
                 TextColumn::make('status')
                     ->label('Статус')
                     ->badge()
@@ -102,11 +108,11 @@ class OrdersTable
                         );
                     })
                     ->openUrlInNewTab(),
-                EditAction::make(),
+                EditAction::make()->label('Изменить'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->label('Удалить выбранные'),
                 ]),
             ])
             ->emptyStateHeading('Заказов пока нет')

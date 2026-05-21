@@ -10,10 +10,12 @@ class ListCategories extends ListRecords
 {
     protected static string $resource = CategoryResource::class;
 
+    protected static ?string $title = 'Категории';
+
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()->label('Добавить категорию'),
         ];
     }
 }

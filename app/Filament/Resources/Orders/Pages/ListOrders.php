@@ -10,10 +10,12 @@ class ListOrders extends ListRecords
 {
     protected static string $resource = OrderResource::class;
 
+    protected static ?string $title = 'Заказы';
+
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()->label('Создать заказ'),
         ];
     }
 }
