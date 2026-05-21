@@ -24,3 +24,17 @@
         @apply bg-cream text-warm-brown text-lg antialiased;
     }
 }
+
+@layer components {
+    .btn-press {
+        @apply transition-[transform,background-color,box-shadow] duration-150 ease-out select-none touch-manipulation;
+    }
+
+    .btn-press:hover {
+        @apply shadow-md;
+    }
+
+    .btn-press:active {
+        @apply scale-[0.96] brightness-95 shadow-none;
+    }
+}

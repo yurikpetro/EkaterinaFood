@@ -47,6 +47,18 @@ class CartController extends Controller
             (int) $validated['quantity'],
         );
 
+        if ($request->wantsJson()) {
+            return response()->json([
+                'total' => $this->cart->total(),
+                'cartCount' => $this->cart->count(),
+                'items' => $this->cart->items()->map(fn (array $item) => [
+                    'product_id' => $item['product']->id,
+                    'quantity' => $item['quantity'],
+                    'subtotal' => $item['subtotal'],
+                ])->values(),
+            ]);
+        }
+
         return redirect()->route('cart.index');
     }
 

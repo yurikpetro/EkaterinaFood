@@ -3,7 +3,11 @@
 @section('title', 'Корзина')
 
 @section('content')
-    <div class="max-w-3xl mx-auto px-4 py-10">
+    <div id="cart-page"
+         class="max-w-3xl mx-auto px-4 py-10"
+         data-update-url="{{ route('cart.update') }}"
+         data-csrf="{{ csrf_token() }}">
+
         <h1 class="text-3xl font-extrabold text-warm-brown mb-8">Корзина</h1>
 
         @if($items->isEmpty())
@@ -14,28 +18,32 @@
                 </a>
             </div>
         @else
-            <div class="space-y-4 mb-8">
+            <div id="cart-items" class="space-y-4 mb-8">
                 @foreach($items as $item)
                     @php $product = $item['product']; @endphp
-                    <div class="bg-white rounded-2xl border border-cream-dark p-5">
+                    <div class="bg-white rounded-2xl border border-cream-dark p-5"
+                         data-cart-item
+                         data-product-id="{{ $product->id }}"
+                         data-unit-price="{{ $product->price }}"
+                         data-min-quantity="{{ $product->min_quantity }}">
                         <div class="flex justify-between items-start gap-4 mb-4">
                             <div>
                                 <h2 class="text-xl font-bold">{{ $product->name }}</h2>
                                 <p class="text-terracotta font-semibold">{{ $product->formattedPrice() }} / {{ $product->unit }}</p>
                             </div>
-                            <p class="text-xl font-extrabold whitespace-nowrap">
+                            <p class="text-xl font-extrabold whitespace-nowrap" data-cart-subtotal>
                                 {{ number_format($item['subtotal'], 0, ',', ' ') }} ₽
                             </p>
                         </div>
                         <div class="flex flex-wrap items-center gap-4">
-                            <form action="{{ route('cart.update') }}" method="POST" class="flex items-center gap-2">
-                                @csrf
-                                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                <label class="font-semibold text-sm">Кол-во</label>
-                                <input type="number" name="quantity" value="{{ $item['quantity'] }}" min="0"
-                                       class="w-20 text-lg border-2 border-cream-dark rounded-lg px-2 py-1">
-                                <button type="submit" class="text-olive font-semibold hover:underline">Обновить</button>
-                            </form>
+                            <label class="flex items-center gap-2 font-semibold text-sm">
+                                Кол-во
+                                <input type="number"
+                                       data-cart-quantity
+                                       value="{{ $item['quantity'] }}"
+                                       min="0"
+                                       class="w-20 text-lg border-2 border-cream-dark rounded-lg px-2 py-1 focus:border-terracotta focus:outline-none">
+                            </label>
                             <form action="{{ route('cart.remove', $product->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
@@ -49,7 +57,7 @@
             <div class="bg-olive/10 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <p class="text-sm font-semibold text-olive uppercase">Итого</p>
-                    <p class="text-4xl font-extrabold text-warm-brown">{{ number_format($total, 0, ',', ' ') }} ₽</p>
+                    <p class="text-4xl font-extrabold text-warm-brown" data-cart-total>{{ number_format($total, 0, ',', ' ') }} ₽</p>
                 </div>
                 <a href="{{ route('checkout.show') }}"
                    class="bg-terracotta text-white text-xl font-bold px-8 py-4 rounded-2xl hover:bg-terracotta-dark transition text-center">

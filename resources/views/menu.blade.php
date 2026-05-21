@@ -49,7 +49,7 @@
                                                class="mt-1 w-24 text-lg border-2 border-cream-dark rounded-xl px-3 py-2 focus:border-terracotta focus:outline-none">
                                     </label>
                                     <button type="submit"
-                                            class="bg-terracotta text-white font-bold text-lg px-6 py-3 rounded-xl hover:bg-terracotta-dark transition">
+                                            class="btn-press bg-terracotta text-white font-bold text-lg px-6 py-3 rounded-xl shadow-sm hover:bg-terracotta-dark">
                                         В корзину
                                     </button>
                                 </form>
