@@ -26,6 +26,15 @@ class AppServiceProvider extends ServiceProvider
         App::setLocale(config('app.locale'));
         Carbon::setLocale(config('app.locale'));
 
+        foreach ([
+            storage_path('app/public/products'),
+            storage_path('app/public/livewire-tmp'),
+        ] as $directory) {
+            if (! is_dir($directory)) {
+                mkdir($directory, 0755, true);
+            }
+        }
+
         View::composer('layouts.app', function ($view): void {
             $cart = app(CartService::class);
 

@@ -56,9 +56,19 @@ class ProductForm
                         FileUpload::make('image_path')
                             ->label('Фото')
                             ->image()
-                            ->directory('products')
                             ->disk('public')
-                            ->visibility('public'),
+                            ->directory('products')
+                            ->visibility('public')
+                            ->maxSize(2048)
+                            ->maxParallelUploads(1)
+                            ->fetchFileInformation(false)
+                            ->downloadable(false)
+                            ->openable(false)
+                            ->deletable(true)
+                            ->reorderable(false)
+                            ->imagePreviewHeight('160')
+                            ->helperText('JPG, PNG или WebP, не больше 2 МБ. После выбора файла дождитесь галочки, затем нажмите «Сохранить».')
+                            ->columnSpanFull(),
                         Toggle::make('is_active')
                             ->label('В продаже')
                             ->default(true),
