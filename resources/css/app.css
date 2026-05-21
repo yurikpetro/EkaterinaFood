@@ -1,0 +1,23 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Nunito', ui-sans-serif, system-ui, sans-serif;
+    --color-cream: #faf6f0;
+    --color-cream-dark: #f0e8dc;
+    --color-terracotta: #c45c3e;
+    --color-terracotta-dark: #a34a32;
+    --color-olive: #5c6b4a;
+    --color-olive-dark: #4a573c;
+    --color-warm-brown: #3d3229;
+}
+
+@layer base {
+    body {
+        @apply bg-cream text-warm-brown text-lg antialiased;
+    }
+}
