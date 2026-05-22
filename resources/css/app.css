@@ -90,10 +90,23 @@
         @apply rounded-r-[10px];
     }
 
+    .qty-stepper__input-wrap {
+        @apply inline-flex items-center border-x-2 border-cream-dark bg-white;
+    }
+
+    .qty-stepper__suffix {
+        @apply pr-2 text-sm font-semibold text-warm-brown/80 whitespace-nowrap;
+    }
+
     .qty-stepper__input {
-        @apply w-14 sm:w-16 text-center text-lg font-bold text-warm-brown border-x-2 border-cream-dark bg-white focus:outline-none focus:bg-cream/40;
+        @apply w-14 sm:w-16 text-center text-lg font-bold text-warm-brown bg-white focus:outline-none focus:bg-cream/40;
         -moz-appearance: textfield;
         appearance: textfield;
+    }
+
+    .qty-stepper[data-unit='kg'] .qty-stepper__input,
+    .qty-stepper[data-unit='g'] .qty-stepper__input {
+        @apply w-16 sm:w-20;
     }
 
     .qty-stepper__input::-webkit-outer-spin-button,

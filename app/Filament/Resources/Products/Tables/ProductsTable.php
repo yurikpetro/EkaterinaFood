@@ -34,7 +34,8 @@ class ProductsTable
                     ->formatStateUsing(fn (int $state): string => number_format($state, 0, ',', ' ') . ' ₽')
                     ->sortable(),
                 TextColumn::make('unit')
-                    ->label('Ед.'),
+                    ->label('Ед.')
+                    ->formatStateUsing(fn (\App\Enums\ProductUnit $state): string => $state->getLabel()),
                 IconColumn::make('is_active')
                     ->label('В продаже')
                     ->boolean(),

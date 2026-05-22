@@ -31,12 +31,13 @@ class CartService
                     return null;
                 }
 
-                $quantity = max($quantity, $product->min_quantity);
+                $quantity = $product->normalizeAmount($quantity);
 
                 return [
                     'product' => $product,
                     'quantity' => $quantity,
-                    'subtotal' => $product->price * $quantity,
+                    'quantity_label' => $product->formatAmount($quantity),
+                    'subtotal' => $product->calculateSubtotal($quantity),
                 ];
             })
             ->filter()
@@ -51,7 +52,7 @@ class CartService
 
         $cart = session(self::SESSION_KEY, []);
         $current = $cart[$productId] ?? 0;
-        $cart[$productId] = max($current + $quantity, $product->min_quantity);
+        $cart[$productId] = $product->normalizeAmount($current + $quantity);
 
         session([self::SESSION_KEY => $cart]);
     }
@@ -87,7 +88,7 @@ class CartService
 
     public function count(): int
     {
-        return $this->items()->sum('quantity');
+        return count(session(self::SESSION_KEY, []));
     }
 
     public function total(): int
@@ -117,8 +118,11 @@ class CartService
                 'product_id' => $item['product']->id,
                 'name' => $item['product']->name,
                 'quantity' => $item['quantity'],
-                'unit' => $item['product']->unit,
+                'quantity_label' => $item['quantity_label'],
+                'unit' => $item['product']->unit->getLabel(),
+                'unit_type' => $item['product']->unit->value,
                 'price' => $item['product']->price,
+                'price_label' => $item['product']->formattedPricePerUnit(),
                 'subtotal' => $item['subtotal'],
             ])->values()->all(),
         ];

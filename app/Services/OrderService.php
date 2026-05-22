@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\DeliveryType;
 use App\Enums\OrderStatus;
+use App\Enums\ProductUnit;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -49,7 +50,7 @@ class OrderService
                     'product_id' => $product->id,
                     'product_name' => $product->name,
                     'unit_price' => $product->price,
-                    'unit' => $product->unit,
+                    'unit' => $product->unit->getLabel(),
                     'quantity' => $item['quantity'],
                     'subtotal' => $item['subtotal'],
                 ]);
@@ -91,9 +92,11 @@ class OrderService
         ];
 
         foreach ($order->items as $item) {
+            $unit = ProductUnit::fromLegacy($item->unit);
+            $amount = $unit->formatAmount($item->quantity);
             $price = number_format($item->unit_price, 0, ',', ' ');
             $subtotal = number_format($item->subtotal, 0, ',', ' ');
-            $lines[] = "• {$item->product_name} — {$item->quantity} {$item->unit} × {$price} ₽ = {$subtotal} ₽";
+            $lines[] = "• {$item->product_name} — {$amount} × {$price} ₽/{$unit->priceUnitLabel()} = {$subtotal} ₽";
         }
 
         $lines[] = '';

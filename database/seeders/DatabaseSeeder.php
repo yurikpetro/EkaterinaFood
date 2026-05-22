@@ -57,20 +57,20 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Жульен в тарталетках',
                 'description' => 'Закуска в тарталетках',
                 'price' => 100,
-                'unit' => 'шт',
+                'unit' => 'piece',
             ],
             [
                 'name' => 'Баклажанные рулетики с начинкой',
                 'description' => 'Сливочный творожный сыр, чуть-чуть чеснока и орехи. 15 шт в порции — ориентир 1–2 шт на человека',
                 'price' => 600,
-                'unit' => 'порция',
+                'unit' => 'portion',
                 'min_quantity' => 1,
             ],
             [
                 'name' => 'Овощная нарезка',
                 'description' => 'Тарелка Ø 25 см: помидоры черри разных цветов, огурцы, болгарский перец (разноцветный, мясистый)',
                 'price' => 600,
-                'unit' => 'тарелка',
+                'unit' => 'plate',
             ],
         ]);
 
@@ -79,13 +79,13 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Пицца большая',
                 'description' => '32 см',
                 'price' => 800,
-                'unit' => 'шт',
+                'unit' => 'piece',
             ],
             [
                 'name' => 'Пирог',
                 'description' => 'Диаметр 32 см (как пицца)',
                 'price' => 800,
-                'unit' => 'шт',
+                'unit' => 'piece',
             ],
         ]);
 
@@ -94,7 +94,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Курица по-французски',
                 'description' => 'Большая сытная порция (размером с телефон): грибы, помидор, сыр',
                 'price' => 300,
-                'unit' => 'порция',
+                'unit' => 'portion',
             ],
         ]);
 
@@ -103,19 +103,22 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Мякоть шеи маленькими кусочками',
                 'description' => 'Мангальное ассорти на третий день',
                 'price' => 3500,
-                'unit' => 'кг',
+                'unit' => 'kg',
+                'min_quantity' => 5,
             ],
             [
                 'name' => 'Аджапсандал',
                 'description' => 'Мангальное ассорти на третий день',
                 'price' => 1400,
-                'unit' => 'кг',
+                'unit' => 'kg',
+                'min_quantity' => 5,
             ],
             [
                 'name' => 'Картошка с салом',
                 'description' => 'Мангальное ассорти на третий день',
                 'price' => 1000,
-                'unit' => 'кг',
+                'unit' => 'kg',
+                'min_quantity' => 5,
             ],
         ]);
     }

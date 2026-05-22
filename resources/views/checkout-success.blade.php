@@ -21,7 +21,7 @@
             <h2 class="font-bold text-lg mb-3">Состав заказа</h2>
             <ul class="space-y-2">
                 @foreach($order->items as $item)
-                    <li>{{ $item->product_name }} — {{ $item->quantity }} {{ $item->unit }} — {{ number_format($item->subtotal, 0, ',', ' ') }} ₽</li>
+                    <li>{{ $item->product_name }} — {{ \App\Enums\ProductUnit::fromLegacy($item->unit)->formatAmount($item->quantity) }} — {{ number_format($item->subtotal, 0, ',', ' ') }} ₽</li>
                 @endforeach
             </ul>
         </div>

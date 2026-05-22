@@ -32,7 +32,7 @@
                         <div class="min-w-0">
                             <p class="font-semibold text-warm-brown leading-snug truncate">{{ $product->name }}</p>
                             <p class="text-sm text-muted">
-                                {{ $item['quantity'] }} {{ $product->unit }} × {{ number_format($product->price, 0, ',', ' ') }} ₽
+                                {{ $item['quantity_label'] ?? $product->formatAmount($item['quantity']) }} × {{ $product->formattedPricePerUnit() }}
                             </p>
                         </div>
                         <p class="font-bold text-terracotta shrink-0">

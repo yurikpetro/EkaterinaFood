@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\Products\Schemas;
 
+use App\Enums\ProductUnit;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 
 class ProductForm
@@ -37,14 +39,28 @@ class ProductForm
                             ->required()
                             ->numeric()
                             ->minValue(1)
-                            ->suffix('₽'),
-                        TextInput::make('unit')
+                            ->suffix('₽')
+                            ->helperText('Для весовых блюд — цена за 1 кг'),
+                        Select::make('unit')
                             ->label('Единица')
+                            ->options(ProductUnit::class)
+                            ->default(ProductUnit::Portion)
                             ->required()
-                            ->default('порция')
-                            ->maxLength(50),
+                            ->live()
+                            ->native(false),
                         TextInput::make('min_quantity')
-                            ->label('Мин. количество')
+                            ->label(function (Get $get): string {
+                                $unit = $get('unit');
+                                $enum = $unit instanceof ProductUnit ? $unit : ProductUnit::tryFrom((string) $unit);
+
+                                return $enum?->minQuantityFieldLabel() ?? 'Мин. количество';
+                            })
+                            ->helperText(function (Get $get): ?string {
+                                $unit = $get('unit');
+                                $enum = $unit instanceof ProductUnit ? $unit : ProductUnit::tryFrom((string) $unit);
+
+                                return $enum?->minQuantityHelper();
+                            })
                             ->required()
                             ->numeric()
                             ->default(1)

@@ -31,11 +31,11 @@
                          data-product-id="{{ $product->id }}"
                          data-unit-price="{{ $product->price }}"
                          data-min-quantity="{{ $product->min_quantity }}"
-                         data-unit="{{ $product->unit }}">
+                         data-unit-type="{{ $product->unit->value }}">
                         <div class="flex justify-between items-start gap-4 mb-4 pr-2">
                             <div>
                                 <h2 class="text-xl font-bold">{{ $product->name }}</h2>
-                                <p class="text-terracotta font-semibold">{{ $product->formattedPrice() }} / {{ $product->unit }}</p>
+                                <p class="text-terracotta font-semibold">{{ $product->formattedPricePerUnit() }}</p>
                             </div>
                             <p class="text-xl font-extrabold whitespace-nowrap" data-cart-subtotal>
                                 {{ number_format($item['subtotal'], 0, ',', ' ') }} ₽
@@ -44,13 +44,15 @@
                         <p class="text-sm text-amber-800 bg-amber-50 rounded-lg px-3 py-2 mb-3 hidden"
                            data-cart-min-hint
                            role="status">
-                            Ниже минимума ({{ $product->min_quantity }} {{ $product->unit }}) — позиция не войдёт в заказ. Уменьшите до 0, чтобы удалить.
+                            Ниже минимума ({{ $product->formatAmount($product->min_quantity) }}) — позиция не войдёт в заказ. Уменьшите до 0, чтобы удалить.
                         </p>
                         <div class="flex items-end justify-between gap-4">
                             <div class="flex items-center gap-3">
-                                <span class="font-semibold text-sm shrink-0">Кол-во</span>
-                                <x-quantity-stepper
+                                <span class="font-semibold text-sm shrink-0">{{ $product->unit->amountInputLabel() }}</span>
+                                <x-amount-stepper
                                     data-cart-quantity
+                                    data-cart-amount
+                                    :unit="$product->unit->value"
                                     :value="$item['quantity']"
                                     :min="0"
                                 />

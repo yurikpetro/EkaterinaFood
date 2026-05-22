@@ -44,12 +44,11 @@
                             <div class="flex-1 flex flex-col">
                                 <h3 class="text-xl font-bold mb-1">{{ $product->name }}</h3>
                                 <p class="text-xl font-extrabold text-terracotta mb-2 sm:mb-0">
-                                    {{ $product->formattedPrice() }}
-                                    <span class="text-base font-normal text-muted">/ {{ $product->unit }}</span>
+                                    {{ $product->formattedPricePerUnit() }}
                                 </p>
                                 @if($inCartQty > 0)
                                     <p class="text-sm font-semibold text-olive mb-2" data-in-cart-badge="{{ $product->id }}">
-                                        В корзине: {{ $inCartQty }} {{ $product->unit }}
+                                        В корзине: {{ $product->formatAmount($inCartQty) }}
                                     </p>
                                 @else
                                     <p class="text-sm font-semibold text-olive mb-2 hidden" data-in-cart-badge="{{ $product->id }}"></p>
@@ -57,8 +56,8 @@
                                 @if($product->description)
                                     <p class="text-base text-muted mb-4">{{ $product->description }}</p>
                                 @endif
-                                @if($product->min_quantity > 1)
-                                    <p class="text-sm text-olive mb-2">Минимум: {{ $product->min_quantity }} {{ $product->unit }}</p>
+                                @if($product->min_quantity > ($product->unit->isWeighted() ? 0 : 1))
+                                    <p class="text-sm text-olive mb-2">Минимум: {{ $product->formatAmount($product->min_quantity) }}</p>
                                 @endif
 
                                 <form action="{{ route('cart.add') }}" method="POST"
@@ -67,9 +66,10 @@
                                     @csrf
                                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                                     <label class="flex flex-col gap-1.5 text-sm font-semibold">
-                                        Кол-во
-                                        <x-quantity-stepper
+                                        {{ $product->unit->amountInputLabel() }}
+                                        <x-amount-stepper
                                             name="quantity"
+                                            :unit="$product->unit->value"
                                             :value="$product->min_quantity"
                                             :min="$product->min_quantity"
                                         />

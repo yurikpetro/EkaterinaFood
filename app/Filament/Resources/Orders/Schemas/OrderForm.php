@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Orders\Schemas;
 
 use App\Enums\DeliveryType;
 use App\Enums\OrderStatus;
+use App\Enums\ProductUnit;
 use App\Services\OrderService;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Placeholder;
@@ -77,14 +78,16 @@ class OrderForm
                                 }
 
                                 $rows = $record->items->map(function ($item) {
+                                    $unit = ProductUnit::fromLegacy($item->unit);
+                                    $amount = $unit->formatAmount($item->quantity);
                                     $price = number_format($item->unit_price, 0, ',', ' ');
                                     $subtotal = number_format($item->subtotal, 0, ',', ' ');
 
-                                    return "<tr class=\"border-b\"><td class=\"py-2 pr-4\">{$item->product_name}</td><td class=\"py-2 pr-4\">{$item->quantity} {$item->unit}</td><td class=\"py-2 pr-4\">{$price} ₽</td><td class=\"py-2 font-medium\">{$subtotal} ₽</td></tr>";
+                                    return "<tr class=\"border-b\"><td class=\"py-2 pr-4\">{$item->product_name}</td><td class=\"py-2 pr-4\">{$amount}</td><td class=\"py-2 pr-4\">{$price} ₽/{$unit->priceUnitLabel()}</td><td class=\"py-2 font-medium\">{$subtotal} ₽</td></tr>";
                                 })->implode('');
 
                                 return new HtmlString(
-                                    '<table class="w-full text-sm"><thead><tr class="text-left text-gray-500"><th class="pb-2">Блюдо</th><th class="pb-2">Кол-во</th><th class="pb-2">Цена</th><th class="pb-2">Сумма</th></tr></thead><tbody>' . $rows . '</tbody></table>'
+                                    '<table class="w-full text-sm"><thead><tr class="text-left text-gray-500"><th class="pb-2">Блюдо</th><th class="pb-2">Количество</th><th class="pb-2">Цена</th><th class="pb-2">Сумма</th></tr></thead><tbody>' . $rows . '</tbody></table>'
                                 );
                             })
                             ->columnSpanFull(),

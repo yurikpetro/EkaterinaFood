@@ -3,6 +3,47 @@ const formatPrice = (amount) =>
 
 const formatNumber = (amount) => new Intl.NumberFormat('ru-RU').format(amount);
 
+const calcSubtotal = (unitType, unitPrice, quantity) => {
+    const qty = Number(quantity) || 0;
+
+    if (qty <= 0) {
+        return 0;
+    }
+
+    switch (unitType) {
+        case 'kg':
+            return Math.round((unitPrice * qty) / 10);
+        case 'g':
+            return Math.round((unitPrice * qty) / 1000);
+        default:
+            return unitPrice * qty;
+    }
+};
+
+const displayToInternal = (unitType, displayValue) => {
+    const value = Number(displayValue);
+
+    if (Number.isNaN(value)) {
+        return 0;
+    }
+
+    if (unitType === 'kg') {
+        return Math.max(0, Math.round(value * 10));
+    }
+
+    return Math.max(0, Math.round(value));
+};
+
+const internalToDisplay = (unitType, internalValue) => {
+    const value = Number(internalValue) || 0;
+
+    if (unitType === 'kg') {
+        return (value / 10).toFixed(1).replace(/\.0$/, '');
+    }
+
+    return String(value);
+};
+
 let toastTimer = null;
 
 const showToast = (message) => {
@@ -50,7 +91,7 @@ const buildFloatingItemHtml = (item) => `
         <div class="min-w-0">
             <p class="font-semibold text-warm-brown leading-snug truncate">${item.name}</p>
             <p class="text-sm text-warm-brown/80">
-                ${item.quantity} ${item.unit} × ${formatNumber(item.price)} ₽
+                ${item.quantity_label} × ${item.price_label ?? formatNumber(item.price) + ' ₽'}
             </p>
         </div>
         <p class="font-bold text-terracotta shrink-0">${formatPrice(item.subtotal)}</p>
@@ -99,7 +140,7 @@ const updateInCartBadges = (items) => {
         const item = items.find((i) => String(i.product_id) === productId);
 
         if (item) {
-            el.textContent = `В корзине: ${item.quantity} ${item.unit}`;
+            el.textContent = `В корзине: ${item.quantity_label}`;
             el.classList.remove('hidden');
         } else {
             el.textContent = '';
@@ -115,6 +156,87 @@ const initFlashDismiss = () => {
             el.style.opacity = '0';
             setTimeout(() => el.remove(), 300);
         }, 6000);
+    });
+};
+
+const initAmountSteppers = () => {
+    document.querySelectorAll('[data-amount-stepper]').forEach((stepper) => {
+        const unitType = stepper.dataset.unit;
+        const step = Number(stepper.dataset.step) || 1;
+        const minInternal = Number(stepper.dataset.minInternal) || 0;
+        const display = stepper.querySelector('[data-amount-display]');
+        const hidden = stepper.querySelector('[data-amount-value]');
+        const decrement = stepper.querySelector('[data-amount-decrement]');
+        const increment = stepper.querySelector('[data-amount-increment]');
+
+        if (!display || !hidden || !decrement || !increment) {
+            return;
+        }
+
+        const minDisplay = Number(internalToDisplay(unitType, minInternal));
+
+        const syncHidden = () => {
+            const internal = displayToInternal(unitType, display.value);
+            hidden.value = String(internal);
+            return internal;
+        };
+
+        const clampDisplay = (rawValue) => {
+            let displayValue = Number(rawValue);
+
+            if (Number.isNaN(displayValue)) {
+                displayValue = minDisplay;
+            }
+
+            if (unitType === 'kg') {
+                displayValue = Math.max(minDisplay, Math.round(displayValue * 10) / 10);
+            } else {
+                displayValue = Math.max(minDisplay, Math.round(displayValue));
+            }
+
+            display.value = internalToDisplay(unitType, displayToInternal(unitType, displayValue));
+            return syncHidden();
+        };
+
+        const updateButtons = () => {
+            const internal = Number(hidden.value) || 0;
+            const displayValue = Number(display.value) || 0;
+            decrement.disabled = unitType === 'kg'
+                ? displayValue <= minDisplay
+                : internal <= minInternal;
+        };
+
+        const setInternal = (internalValue) => {
+            hidden.value = String(Math.max(0, internalValue));
+            display.value = internalToDisplay(unitType, hidden.value);
+            updateButtons();
+            display.dispatchEvent(new Event('input', { bubbles: true }));
+            display.dispatchEvent(new Event('change', { bubbles: true }));
+        };
+
+        decrement.addEventListener('click', () => {
+            const internal = Number(hidden.value) || 0;
+            const next = Math.max(0, internal - step);
+            setInternal(next);
+        });
+
+        increment.addEventListener('click', () => {
+            const internal = Number(hidden.value) || 0;
+            setInternal(internal + step);
+        });
+
+        display.addEventListener('input', () => {
+            syncHidden();
+            updateButtons();
+        });
+
+        display.addEventListener('change', () => {
+            clampDisplay(display.value);
+            updateButtons();
+        });
+
+        clampDisplay(display.value);
+        updateButtons();
     });
 };
 
@@ -351,13 +473,18 @@ const initCartPage = () => {
         renderFloatingCart({ cartCount: 0, total: 0, items: [] });
     };
 
+    const getRowQuantity = (row) => {
+        const hidden = row.querySelector('[data-amount-value]');
+
+        return Number(hidden?.value) || 0;
+    };
+
     const updateMinHint = (row) => {
-        const input = row.querySelector('[data-cart-quantity]');
         const hint = row.querySelector('[data-cart-min-hint]');
         const minQty = Number(row.dataset.minQuantity);
-        const qty = parseInt(input?.value, 10) || 0;
+        const qty = getRowQuantity(row);
 
-        if (!hint || minQty <= 1) {
+        if (!hint || minQty <= (row.dataset.unitType === 'kg' ? 0 : 1)) {
             return;
         }
 
@@ -368,12 +495,12 @@ const initCartPage = () => {
         let total = 0;
 
         page.querySelectorAll('[data-cart-item]').forEach((row) => {
-            const input = row.querySelector('[data-cart-quantity]');
             const unitPrice = Number(row.dataset.unitPrice);
             const minQty = Number(row.dataset.minQuantity);
-            const qty = parseInt(input.value, 10) || 0;
+            const unitType = row.dataset.unitType;
+            const qty = getRowQuantity(row);
             const effectiveQty = qty >= minQty ? qty : 0;
-            const subtotal = effectiveQty * unitPrice;
+            const subtotal = calcSubtotal(unitType, unitPrice, effectiveQty);
 
             row.querySelector('[data-cart-subtotal]').textContent = formatPrice(subtotal);
             total += subtotal;
@@ -400,8 +527,16 @@ const initCartPage = () => {
                 return;
             }
 
-            const input = row.querySelector('[data-cart-quantity]');
-            input.value = serverItem.quantity;
+            const stepper = row.querySelector('[data-cart-amount]');
+            const display = stepper?.querySelector('[data-amount-display]');
+            const hidden = stepper?.querySelector('[data-amount-value]');
+            const unitType = row.dataset.unitType;
+
+            if (hidden && display) {
+                hidden.value = String(serverItem.quantity);
+                display.value = internalToDisplay(unitType, serverItem.quantity);
+            }
+
             row.querySelector('[data-cart-subtotal]').textContent = formatPrice(serverItem.subtotal);
             updateMinHint(row);
         });
@@ -464,21 +599,27 @@ const initCartPage = () => {
         updateMinHint(row);
     });
 
-    page.querySelectorAll('[data-cart-quantity]').forEach((input) => {
-        const row = input.closest('[data-cart-item]');
+    page.querySelectorAll('[data-cart-amount]').forEach((stepper) => {
+        const row = stepper.closest('[data-cart-item]');
         const productId = row.dataset.productId;
+        const hidden = stepper.querySelector('[data-amount-value]');
 
-        input.addEventListener('input', () => {
+        if (!hidden) {
+            return;
+        }
+
+        const sync = () => {
             recalcLocal();
             row.classList.add('cart-syncing');
-            scheduleSync(productId, input.value, row);
-        });
+            scheduleSync(productId, hidden.value, row);
+        };
 
-        input.addEventListener('change', () => {
+        stepper.addEventListener('input', sync);
+        stepper.addEventListener('change', () => {
             recalcLocal();
             clearTimeout(syncTimers.get(productId));
             syncTimers.delete(productId);
-            syncToServer(productId, input.value, row);
+            syncToServer(productId, hidden.value, row);
         });
     });
 
@@ -551,6 +692,7 @@ const initCheckout = () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     initFlashDismiss();
+    initAmountSteppers();
     initQuantitySteppers();
     initFloatingCart();
     initMenuCategoryNav();

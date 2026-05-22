@@ -16,7 +16,7 @@
             <ul class="space-y-2 text-base">
                 @foreach($items as $item)
                     <li class="flex justify-between gap-2">
-                        <span>{{ $item['product']->name }} × {{ $item['quantity'] }}</span>
+                        <span>{{ $item['product']->name }} — {{ $item['quantity_label'] ?? $item['product']->formatAmount($item['quantity']) }}</span>
                         <span class="font-semibold">{{ number_format($item['subtotal'], 0, ',', ' ') }} ₽</span>
                     </li>
                 @endforeach
