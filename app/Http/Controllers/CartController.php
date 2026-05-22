@@ -32,6 +32,10 @@ class CartController extends Controller
             (int) ($validated['quantity'] ?? 1),
         );
 
+        if ($request->wantsJson()) {
+            return response()->json($this->cart->toJson());
+        }
+
         return back()->with('success', 'Добавлено в корзину');
     }
 
@@ -48,15 +52,7 @@ class CartController extends Controller
         );
 
         if ($request->wantsJson()) {
-            return response()->json([
-                'total' => $this->cart->total(),
-                'cartCount' => $this->cart->count(),
-                'items' => $this->cart->items()->map(fn (array $item) => [
-                    'product_id' => $item['product']->id,
-                    'quantity' => $item['quantity'],
-                    'subtotal' => $item['subtotal'],
-                ])->values(),
-            ]);
+            return response()->json($this->cart->toJson());
         }
 
         return redirect()->route('cart.index');

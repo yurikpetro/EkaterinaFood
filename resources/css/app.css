@@ -26,6 +26,30 @@
 }
 
 @layer components {
+    .page-wide {
+        @apply max-w-5xl mx-auto px-4;
+    }
+
+    .page-narrow {
+        @apply max-w-3xl mx-auto px-4;
+    }
+
+    .text-muted {
+        @apply text-warm-brown/80;
+    }
+
+    .nav-link {
+        @apply hover:text-terracotta transition rounded-lg px-2 py-1;
+    }
+
+    .nav-link:focus-visible {
+        @apply outline-2 outline-offset-2 outline-terracotta;
+    }
+
+    .nav-link--active {
+        @apply text-terracotta;
+    }
+
     .btn-press {
         @apply transition-[transform,background-color,box-shadow] duration-150 ease-out select-none touch-manipulation;
     }
@@ -36,6 +60,10 @@
 
     .btn-press:active {
         @apply scale-[0.96] brightness-95 shadow-none;
+    }
+
+    .btn-press:focus-visible {
+        @apply outline-2 outline-offset-2 outline-terracotta;
     }
 
     .qty-stepper__control {
@@ -76,5 +104,106 @@
 
     .cart-item-remove:active {
         @apply scale-95 bg-red-100;
+    }
+
+    .cart-item-remove:focus-visible {
+        @apply outline-2 outline-offset-2 outline-red-400;
+    }
+
+    .menu-category-nav {
+        @apply sticky top-[4.5rem] z-40 -mx-4 px-4 py-3 mb-6 bg-cream/95 backdrop-blur border-b border-cream-dark;
+    }
+
+    .menu-category-chip {
+        @apply shrink-0 px-4 py-2 rounded-full text-sm font-semibold bg-white border-2 border-cream-dark text-warm-brown hover:border-terracotta hover:text-terracotta transition;
+    }
+
+    .menu-category-chip--active {
+        @apply bg-terracotta text-white border-terracotta;
+    }
+
+    .menu-category-chip:focus-visible {
+        @apply outline-2 outline-offset-2 outline-terracotta;
+    }
+
+    .delivery-option {
+        @apply flex items-center gap-2 bg-cream px-4 py-3 rounded-xl cursor-pointer flex-1 border-2 border-transparent transition;
+    }
+
+    .delivery-option:has(input:checked) {
+        @apply border-terracotta bg-terracotta/5 ring-2 ring-terracotta/20;
+    }
+
+    .order-steps {
+        @apply flex items-center justify-center gap-2 sm:gap-4 text-sm font-semibold mb-8;
+    }
+
+    .order-step {
+        @apply flex items-center gap-2 text-warm-brown/50;
+    }
+
+    .order-step--active {
+        @apply text-terracotta;
+    }
+
+    .order-step--done {
+        @apply text-olive;
+    }
+
+    .order-step__dot {
+        @apply w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 border-current;
+    }
+
+    .order-step--active .order-step__dot,
+    .order-step--done .order-step__dot {
+        @apply bg-current text-white border-current;
+    }
+
+    .checkout-sticky-bar {
+        @apply fixed bottom-0 left-0 right-0 z-30 bg-white border-t-2 border-cream-dark p-4 shadow-[0_-4px_20px_rgba(61,50,41,0.12)] sm:hidden;
+    }
+
+    .cart-syncing {
+        @apply opacity-60 pointer-events-none transition-opacity duration-150;
+    }
+
+    .cart-badge-pop {
+        animation: cart-badge-pop 0.35s ease-out;
+    }
+
+    @keyframes cart-badge-pop {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.25);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    #site-toast {
+        @apply fixed top-20 left-1/2 -translate-x-1/2 z-[60] max-w-md w-[calc(100%-2rem)] px-4 py-3 rounded-xl bg-olive text-white font-bold text-center shadow-lg transition-opacity duration-300 pointer-events-none;
+    }
+
+    #site-toast.is-hidden {
+        @apply opacity-0;
+    }
+
+    .flash-alert {
+        @apply rounded-xl px-4 py-3 font-medium;
+    }
+
+    .flash-alert:focus-visible {
+        @apply outline-2 outline-offset-2 outline-olive;
+    }
+
+    .time-preset {
+        @apply px-3 py-1.5 rounded-lg text-sm font-semibold bg-cream border-2 border-cream-dark hover:border-terracotta transition;
+    }
+
+    .time-preset:focus-visible {
+        @apply outline-2 outline-offset-2 outline-terracotta;
     }
 }

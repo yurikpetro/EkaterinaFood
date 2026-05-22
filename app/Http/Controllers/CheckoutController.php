@@ -27,6 +27,7 @@ class CheckoutController extends Controller
             'total' => $this->cart->total(),
             'cartCount' => $this->cart->count(),
             'pickupAddress' => Settings::get(Settings::PICKUP_ADDRESS),
+            'checkoutPhone' => Settings::get(Settings::PHONE),
         ]);
     }
 

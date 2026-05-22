@@ -99,4 +99,28 @@ class CartService
     {
         return $this->items()->isEmpty();
     }
+
+    /**
+     * @return array<int, int>
+     */
+    public function quantities(): array
+    {
+        return session(self::SESSION_KEY, []);
+    }
+
+    public function toJson(): array
+    {
+        return [
+            'total' => $this->total(),
+            'cartCount' => $this->count(),
+            'items' => $this->items()->map(fn (array $item) => [
+                'product_id' => $item['product']->id,
+                'name' => $item['product']->name,
+                'quantity' => $item['quantity'],
+                'unit' => $item['product']->unit,
+                'price' => $item['product']->price,
+                'subtotal' => $item['subtotal'],
+            ])->values()->all(),
+        ];
+    }
 }

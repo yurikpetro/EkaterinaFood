@@ -23,6 +23,7 @@ class MenuController extends Controller
         return view('menu', [
             'categories' => $categories,
             'cartCount' => $this->cart->count(),
+            'cartQuantities' => $this->cart->quantities(),
         ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Support\Settings;
 use App\Services\CartService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
@@ -42,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
                 'cartItems' => $cart->items(),
                 'cartTotal' => $cart->total(),
                 'cartCount' => $cart->count(),
+                'headerPhone' => Settings::get(Settings::PHONE),
             ]);
         });
     }

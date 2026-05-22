@@ -98,7 +98,7 @@ class OrderService
 
         $lines[] = '';
         $lines[] = 'Итого: ' . $order->formattedTotal();
-        $lines[] = 'Способ: ' . $order->delivery_type->label();
+        $lines[] = 'Способ: ' . $order->delivery_type->getLabel();
 
         if ($order->address) {
             $lines[] = 'Адрес: ' . $order->address;
