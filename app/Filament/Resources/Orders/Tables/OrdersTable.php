@@ -6,7 +6,6 @@ use App\Enums\DeliveryType;
 use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Services\OrderService;
-use App\Support\Settings;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
@@ -110,7 +109,7 @@ class OrdersTable
                             $service = app(OrderService::class);
 
                             return $service->whatsAppUrl(
-                                Settings::get(Settings::WHATSAPP),
+                                $record->customer_phone,
                                 $service->adminWhatsAppText($record),
                             );
                         })

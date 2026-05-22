@@ -88,8 +88,36 @@ class OrderService
             "Имя: {$order->customer_name}",
             "Телефон: {$order->customer_phone}",
             '',
-            'Состав заказа:',
         ];
+
+        $this->appendOrderSummaryLines($order, $lines);
+
+        return implode("\n", $lines);
+    }
+
+    public function adminWhatsAppText(Order $order): string
+    {
+        $lines = [
+            "Здравствуйте, {$order->customer_name}!",
+            '',
+            "Ваш заказ {$order->number}:",
+            '',
+        ];
+
+        $this->appendOrderSummaryLines($order, $lines);
+
+        $lines[] = '';
+        $lines[] = 'Спасибо за заказ! Если нужно что-то уточнить — напишите, пожалуйста.';
+
+        return implode("\n", $lines);
+    }
+
+    /**
+     * @param  list<string>  $lines
+     */
+    private function appendOrderSummaryLines(Order $order, array &$lines): void
+    {
+        $lines[] = 'Состав заказа:';
 
         foreach ($order->items as $item) {
             $unit = ProductUnit::fromLegacy($item->unit);
@@ -101,7 +129,7 @@ class OrderService
 
         $lines[] = '';
         $lines[] = 'Итого: ' . $order->formattedTotal();
-        $lines[] = 'Способ: ' . $order->delivery_type->getLabel();
+        $lines[] = 'Способ получения: ' . $order->delivery_type->getLabel();
 
         if ($order->address) {
             $lines[] = 'Адрес: ' . $order->address;
@@ -116,13 +144,6 @@ class OrderService
         if ($order->comment) {
             $lines[] = 'Комментарий: ' . $order->comment;
         }
-
-        return implode("\n", $lines);
-    }
-
-    public function adminWhatsAppText(Order $order): string
-    {
-        return $this->whatsAppText($order);
     }
 
     public function whatsAppUrl(string $phone, string $text): string

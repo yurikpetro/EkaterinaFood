@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Orders\Pages;
 use App\Enums\OrderStatus;
 use App\Filament\Resources\Orders\OrderResource;
 use App\Services\OrderService;
-use App\Support\Settings;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\Textarea;
@@ -52,7 +51,7 @@ class EditOrder extends EditRecord
                 ->label('Открыть WhatsApp')
                 ->icon('heroicon-o-chat-bubble-left-right')
                 ->color('success')
-                ->url($service->whatsAppUrl(Settings::get(Settings::WHATSAPP), $service->adminWhatsAppText($order)))
+                ->url($service->whatsAppUrl($order->customer_phone, $service->adminWhatsAppText($order)))
                 ->openUrlInNewTab(),
             DeleteAction::make()->label('Удалить'),
         ];
