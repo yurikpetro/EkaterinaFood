@@ -62,7 +62,7 @@
                 @if($telegram)
                     <a href="{{ $telegram }}" target="_blank" rel="noopener"
                        class="btn-press w-full sm:w-auto inline-block bg-telegram text-white font-semibold px-6 py-3 rounded-xl hover:brightness-95">
-                        Telegram
+                        Написать в Telegram
                     </a>
                 @endif
                 @if($telegramChannel)
